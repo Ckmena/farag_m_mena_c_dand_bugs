@@ -1,86 +1,71 @@
 (() => {
-	console.log('fired');
 
+	// // set up the puzzle pieces and boards
+	const pieces = ["topLeft", "topRight", "bottomLeft", "bottomRight"];
 
-	// set up the puzzle pieces and boards
-	//need a reference to each piece that we want to create
-	const thePieces = ["topLeft", "topRight", "bottomLeft", "bottomRight"]
+	let piecesBoard = document.querySelector(".puzzle-pieces"),
+		puzzleBoard = document.querySelector(".puzzle-board"),
+		// generates the thumbnail under to the drop zone 
+		puzzleSelectors = document.querySelectorAll("#buttonHolder img");
 
-	//get a reference to the drag side
-	let piecesBoard = document.querySelector(".puzzle-pieces");
-	let puzzleBoard = document.querySelector(".puzzle-board");
+	let dropZones = document.querySelectorAll('.drop-zone');
 
-	//get a refence to the buttons at the bottom so we can change the puzzle
-	let puzzleSelectors = document.querySelectorAll("#buttonHolder img");
-
-	//reference to drop area
-	let dropZones = document.querySelectorAll(".drop-zone");
-
-	//functions go in the middle
+	//funtion in the middle 
 	function createPuzzlePieces(pictureIndex) {
-		//generate images here -> need to make 4 (top left, right bottom left, right)
-		//debugger;
-		//
-		//Loop through the images ref and generate one for each
-		thePieces.forEach((piece, index) => {
-			let newPuzzlePiece = `<img id="piece${index}" class="puzzle-image" src="images/${piece + pictureIndex}.jpg" alt="puzzle pieces" draggable>`;
-
+		//generate puzzle pieces for the puzzle
+		pieces.forEach((piece, index) => {
+			let newPuzzlePiece = `<img draggable id="piece${index}" class="puzzle-image" src="images/${piece + pictureIndex}.jpg" alt="thumbnail">`
+			
 			piecesBoard.innerHTML += newPuzzlePiece;
 		});
 
+		puzzleBoard.style.backgroundImage = `url(images/background${pictureIndex}.jpg)`
+		
 		initDrag();
-
-		}
-
-	//drag and drop functionality
-	//
-	function initDrag(){
-		piecesBoard.querySelectorAll('img').forEach(img =>{
-			img.addEventListener("dragstart", function(e){
-				console.log('dragging..');
-				e.dataTransfer.setData('text/plain', this.id);
-			});
-		});
-
 	}
 
-	//coding drop
-	//
-	dropZones.forEach(zone =>{
-		zone.addEventListener("dragover", function(e){
+	// drag n drop function from left to right
+	function initDrag() {
+		piecesBoard.querySelectorAll('img').forEach(img => {
+			img.addEventListener("dragstart", function(e) {
+				console.log('dragging..')
+
+				e.dataTransfer.setData("text/plain", this.id);
+			});
+		});
+	}
+
+	//listener for drag and drop 
+	dropZones.forEach(zone => {
+		zone.addEventListener("dragover", function(e) {
 			e.preventDefault();
-			console.log('dragged over me!');
+			console.log('you dragged here!');
 		});
 
-		zone.addEventListener("drop", function(e){
+		zone.addEventListener("drop", function(e) {
 			e.preventDefault();
-			console.log('dropped!');
+			console.log('you dropped me like i was hot');
 
-			let piece = e.dataTransfer.getData('text/plain');
+
+			//allows the drop using - e data transfer -
+ 			let piece = e.dataTransfer.getData("text/plain");
 			e.target.appendChild(document.querySelector(`#${piece}`));
 		});
 	});
 
-	function resetPuzzlePieces(){
-		//change current puzzle , regenerate the pieces
-		//debugger;
-		//
-		// cleanout the puzzle pieces 
-		piecesBoard.innerHTML= "";
 
-		//event handline goes here
+	function resetPuzzlePieces() {
+		// clean up drop zone by reseting the game 
+		piecesBoard.innerHTML = "";
 		createPuzzlePieces(this.dataset.puzzleref);
+		    var images = document.getElementsByClassName("puzzle-image");
+		    // while + >4 would empty out dropzone 
+    			while(images.length > 4){
+        		images[4].parentNode.removeChild(images[4]);
+    }
+}
 
-	}
-	//event handling goes here
-	puzzleSelectors.forEach(button => button.addEventListener("click", resetPuzzlePieces));
-
-	
-
-	//Call this function to set up / generate the piece on load
+	puzzleSelectors.forEach(puzzle => puzzle.addEventListener("click", resetPuzzlePieces));
 	createPuzzlePieces(0);
-
-
-
-
+	
 })();
