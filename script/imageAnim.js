@@ -1,86 +1,87 @@
 (() => {
-	console.log('fired');
 
+	// // set up the puzzle pieces and boards
+	const pieces = ["topLeft", "topRight", "bottomLeft", "bottomRight"];
 
-	// set up the puzzle pieces and boards
-	//need a reference to each piece that we want to create
-	const thePieces = ["topLeft", "topRight", "bottomLeft", "bottomRight"]
+	let piecesBoard = document.querySelector(".puzzle-pieces"),
+		puzzleBoard = document.querySelector(".puzzle-board"),
+		// generates the thumbnail under to the drop zone 
+		puzzleSelectors = document.querySelectorAll("#buttonHolder img");
 
-	//get a reference to the drag side
-	let piecesBoard = document.querySelector(".puzzle-pieces");
-	let puzzleBoard = document.querySelector(".puzzle-board");
+	let dropZones = document.querySelectorAll('.drop-zone');
 
-	//get a refence to the buttons at the bottom so we can change the puzzle
-	let puzzleSelectors = document.querySelectorAll("#buttonHolder img");
-
-	//reference to drop area
-	let dropZones = document.querySelectorAll(".drop-zone");
-
-	//functions go in the middle
-	function createPuzzlePieces(pictureIndex) {
-		//generate images here -> need to make 4 (top left, right bottom left, right)
-		//debugger;
-		//
-		//Loop through the images ref and generate one for each
-		thePieces.forEach((piece, index) => {
-			let newPuzzlePiece = `<img id="piece${index}" class="puzzle-image" src="images/${piece + pictureIndex}.jpg" alt="puzzle pieces" draggable>`;
-
+	//funtion in the middle 
+	function creatPuzzlePieces(pictureIndex) {
+		//generate puzzle pieces for the puzzle
+		pieces.forEach((piece, index) => {
+			let newPuzzlePiece = `<img draggable id="piece${index}" class="puzzle-image" src="images/${piece + pictureIndex}.jpg" alt="thumbnail">`
+			
 			piecesBoard.innerHTML += newPuzzlePiece;
 		});
 
+		puzzleBoard.style.backgroundImage = `url(images/background${pictureIndex}.jpg)`
+		
 		initDrag();
-
-		}
-
-	//drag and drop functionality
-	//
-	function initDrag(){
-		piecesBoard.querySelectorAll('img').forEach(img =>{
-			img.addEventListener("dragstart", function(e){
-				console.log('dragging..');
-				e.dataTransfer.setData('text/plain', this.id);
-			});
-		});
-
 	}
 
-	//coding drop
-	//
-	dropZones.forEach(zone =>{
-		zone.addEventListener("dragover", function(e){
+	// drag n drop function from left to right
+	function initDrag() {
+		piecesBoard.querySelectorAll('img').forEach(img => {
+			img.addEventListener("dragstart", function(e) {
+				console.log('dragging..')
+
+				e.dataTransfer.setData("text/plain", this.id);
+			});
+		});
+	}
+
+	//listener for drag and drop 
+	dropZones.forEach(zone => {
+		zone.addEventListener("dragover", function(e) {
 			e.preventDefault();
-			console.log('dragged over me!');
+			console.log('you dragged here!');
+
 		});
 
-		zone.addEventListener("drop", function(e){
-			e.preventDefault();
-			console.log('dropped!');
 
-			let piece = e.dataTransfer.getData('text/plain');
+		zone.addEventListener("drop", function(e) {
+			e.preventDefault();
+			console.log('you dropped me like i was hot');
+
+			//this part checks if the dropzone is available or not 
+
+			let noDrop = e.target;
+				while (noDrop !== 0 && !noDrop.classList.contains("drop-zone")) {
+				noDrop = noDrop.parentNode;
+			}
+
+			// this prevent to stacking, blocking  the next images 
+
+			if (noDrop && noDrop.childNodes.length > 0) {
+				return false;
+				e.preventDefault();
+			}
+
+
+			//allows the drop using - e data transfer -
+ 			let piece = e.dataTransfer.getData("text/plain");
 			e.target.appendChild(document.querySelector(`#${piece}`));
 		});
 	});
 
+
 	function resetPuzzlePieces(){
-		//change current puzzle , regenerate the pieces
-		//debugger;
-		//
-		// cleanout the puzzle pieces 
-		piecesBoard.innerHTML= "";
+		// clean up drop zone by reseting the game 
+		piecesBoard.innerHTML = "";
+		creatPuzzlePieces(this.dataset.puzzleref)
 
-		//event handline goes here
-		createPuzzlePieces(this.dataset.puzzleref);
+		
 
-	}
-	//event handling goes here
-	puzzleSelectors.forEach(button => button.addEventListener("click", resetPuzzlePieces));
+    }
 
+
+	puzzleSelectors.forEach(puzzle => puzzle.addEventListener("click", resetPuzzlePieces));
+
+	creatPuzzlePieces(0);
 	
-
-	//Call this function to set up / generate the piece on load
-	createPuzzlePieces(0);
-
-
-
-
 })();
