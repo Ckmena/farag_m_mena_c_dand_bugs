@@ -10,8 +10,8 @@
 
 	let dropZones = document.querySelectorAll('.drop-zone');
 
-	//funtion in the middle 
-	function createPuzzlePieces(pictureIndex) {
+	function creatPuzzlePieces(pictureIndex) {
+
 		//generate puzzle pieces for the puzzle
 		pieces.forEach((piece, index) => {
 			let newPuzzlePiece = `<img draggable id="piece${index}" class="puzzle-image" src="images/${piece + pictureIndex}.jpg" alt="thumbnail">`
@@ -40,11 +40,29 @@
 		zone.addEventListener("dragover", function(e) {
 			e.preventDefault();
 			console.log('you dragged here!');
+
+
 		});
+
 
 		zone.addEventListener("drop", function(e) {
 			e.preventDefault();
 			console.log('you dropped me like i was hot');
+
+
+			//this part checks if the dropzone is available or not 
+
+			let noDrop = e.target;
+				while (noDrop !== 0 && !noDrop.classList.contains("drop-zone")) {
+				noDrop = noDrop.parentNode;
+			}
+
+			// this prevent to stacking, blocking  the next images 
+
+			if (noDrop && noDrop.childNodes.length > 0) {
+				return false;
+				e.preventDefault();
+			}
 
 
 			//allows the drop using - e data transfer -
@@ -52,6 +70,7 @@
 			e.target.appendChild(document.querySelector(`#${piece}`));
 		});
 	});
+
 
 
 	function resetPuzzlePieces() {
