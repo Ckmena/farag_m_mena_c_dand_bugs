@@ -10,8 +10,8 @@
 
 	let dropZones = document.querySelectorAll('.drop-zone');
 
-	//funtion in the middle 
 	function creatPuzzlePieces(pictureIndex) {
+
 		//generate puzzle pieces for the puzzle
 		pieces.forEach((piece, index) => {
 			let newPuzzlePiece = `<img draggable id="piece${index}" class="puzzle-image" src="images/${piece + pictureIndex}.jpg" alt="thumbnail">`
@@ -41,12 +41,14 @@
 			e.preventDefault();
 			console.log('you dragged here!');
 
+
 		});
 
 
 		zone.addEventListener("drop", function(e) {
 			e.preventDefault();
 			console.log('you dropped me like i was hot');
+
 
 			//this part checks if the dropzone is available or not 
 
@@ -70,18 +72,19 @@
 	});
 
 
-	function resetPuzzlePieces(){
+
+	function resetPuzzlePieces() {
 		// clean up drop zone by reseting the game 
 		piecesBoard.innerHTML = "";
-		creatPuzzlePieces(this.dataset.puzzleref)
-
-		
-
+		createPuzzlePieces(this.dataset.puzzleref);
+		    var images = document.getElementsByClassName("puzzle-image");
+		    // while + >4 would empty out dropzone 
+    			while(images.length > 4){
+        		images[4].parentNode.removeChild(images[4]);
     }
-
+}
 
 	puzzleSelectors.forEach(puzzle => puzzle.addEventListener("click", resetPuzzlePieces));
-
-	creatPuzzlePieces(0);
+	createPuzzlePieces(0);
 	
 })();
