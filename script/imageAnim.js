@@ -76,7 +76,7 @@
 	function resetPuzzlePieces() {
 		// clean up drop zone by reseting the game 
 		piecesBoard.innerHTML = "";
-		createPuzzlePieces(this.dataset.puzzleref);
+		creatPuzzlePieces(this.dataset.puzzleref);
 		    var images = document.getElementsByClassName("puzzle-image");
 		    // while + >4 would empty out dropzone 
     			while(images.length > 4){
@@ -85,6 +85,6 @@
 }
 
 	puzzleSelectors.forEach(puzzle => puzzle.addEventListener("click", resetPuzzlePieces));
-	createPuzzlePieces(0);
+	creatPuzzlePieces(0);
 	
 })();
